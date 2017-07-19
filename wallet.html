@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="liskApp">
+    <head>
+        <base href="/">
+        <title>Rise</title>
+
+        <meta name="msapplication-TileColor" content="#F3F3E1" />
+        <meta name="msapplication-TileImage" content="images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="images/mstile-310x310.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/apple-touch-icon-152x152.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="180x180" href="images/apple-touch-icon-180x180.png" />
+        <link rel="icon" type="image/png" href="images/favicon.png" />
+
+        <meta charset="UTF-8">
+        <meta name="application-name" content="{{'Rise - Blockchain Application Platform'|translate}}"/>
+        <meta name="msapplication-TileColor" content="#F3F3E1" />
+        <meta name="msapplication-TileImage" content="/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="/static/css/app.css">
+        <link rel="stylesheet" href="/static/css/rise.css">
+
+        <script src="/static/js/vendor_app.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="application/javascript">
+            var socket = io.connect();
+            socket.on('blocks/change', function (err, data) {
+
+            });
+        </script>
+    </head>
+    <body>
+        <div class="overflow-wrapper">
+            <div ui-view ng-class="lang.id" class="container-app"></div>
+        </div>
+    </body>
+</html>
