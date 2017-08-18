@@ -1,8 +1,7 @@
 require('angular');
 var compareVersion = require('../../node_modules/compare-version/index.js');
-
-angular.module('liskApp').controller('appController', ['dappsService', '$scope', '$rootScope', '$http', "userService", "$interval", "$timeout", 'viewFactory', '$state', 'blockService', 'sendTransactionModal', 'registrationDelegateModal', 'serverSocket', 'delegateService', '$window', 'forgingModal', 'errorModal', 'userInfo', 'transactionsService', 'secondPassphraseModal', 'focusFactory', 'gettextCatalog', function (dappsService, $rootScope, $scope, $http, userService, $interval, $timeout, viewFactory, $state, blockService, sendTransactionModal, registrationDelegateModal, serverSocket, delegateService, $window, forgingModal, errorModal, userInfo, transactionsService, secondPassphraseModal, focusFactory, gettextCatalog) {
-
+angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService', '$scope', '$rootScope', '$http', "userService", "$interval", "$timeout", 'viewFactory', '$state', 'blockService', 'sendTransactionModal', 'registrationDelegateModal', 'serverSocket', 'delegateService', '$window', 'forgingModal', 'errorModal', 'userInfo', 'transactionsService', 'secondPassphraseModal', 'focusFactory', 'gettextCatalog',
+  function (riseAPI, dappsService, $rootScope, $scope, $http, userService, $interval, $timeout, viewFactory, $state, blockService, sendTransactionModal, registrationDelegateModal, serverSocket, delegateService, $window, forgingModal, errorModal, userInfo, transactionsService, secondPassphraseModal, focusFactory, gettextCatalog) {
     $scope.searchTransactions = transactionsService;
     $scope.searchDapp = dappsService;
     $scope.searchBlocks = blockService;
@@ -14,7 +13,14 @@ angular.module('liskApp').controller('appController', ['dappsService', '$scope',
     $scope.subForgingCollapsed = true;
     $scope.categories = {};
     $scope.dataToShow = {forging: false}
-
+    $scope.fees = {
+      send           : 10000000,
+      vote           : 100000000,
+      secondsignature: 500000000,
+      delegate       : 2500000000,
+      multisignature : 500000000,
+      dapp           : 2500000000
+    };
     $scope.getCategoryName = function (id) {
         for (var key in $scope.categories) {
             if ($scope.categories.hasOwnProperty(key)) {
@@ -116,20 +122,24 @@ angular.module('liskApp').controller('appController', ['dappsService', '$scope',
     };
 
     $scope.getVersion = function () {
-//        $http.get("/api/peers/version").then(function (response) {
-//            if (response.data.success) {
-//                $scope.version = response.data.version;
-                $scope.version = '0.1.0';
-//                $http.get("http://127.0.0.1:8001/api/peers/version").then(function (response) {
-//                    $scope.latest = response.data.version;
-                $scope.latest = '0.1.0';
-                $scope.diffVersion = compareVersion($scope.version, $scope.latest);
-//              });
-//            } else {
-//                $scope.diffVersion = -1;
-//                $scope.version = 'version error';
-//            }
-//        });
+      riseAPI.peers.version()
+        .then(function (peerVersionResponse) {
+          return riseAPI.blocks.getStatus()
+            .then(function (blocksResp) {
+              return {
+                peerVersion: peerVersionResponse,
+                blocksResp : blocksResp
+              }
+            })
+        })
+        .then(function (allResp) {
+          $scope.nethash = allResp.blocksResp.nethash;
+          $scope.testnet = $scope.nethash === 'e90d39ac200c495b97deb6d9700745177c7fc4aa80a404108ec820cbeced054c';
+          $scope.version = allResp.peerVersion.version;
+          $scope.latest  = allResp.peerVersion.version;
+          $scope.diffVersion = compareVersion($scope.version, $scope.latest);
+          $scope.port = window.location.port || window.location.protocol.indexOf('https') !== -1 ? 443 : 80;
+        });
     };
 
     $scope.convertToCUR = function (shift, cur) {

@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('registrationDelegateModalController', ["$scope", "registrationDelegateModal", "$http", "userService", "feeService", "delegateService", function ($scope, registrationDelegateModal, $http, userService, feeService, delegateService) {
+angular.module('liskApp').controller('registrationDelegateModalController', ['riseAPI', "$scope", "registrationDelegateModal", "$http", "userService", "feeService", "delegateService", function (riseAPI, $scope, registrationDelegateModal, $http, userService, feeService, delegateService) {
 
     $scope.error = null;
     $scope.sending = false;
@@ -103,24 +103,29 @@ angular.module('liskApp').controller('registrationDelegateModalController', ["$s
 
         if (!$scope.sending) {
             $scope.sending = true;
+            var shiftjs = require('shift-js');
+            var registration = shiftjs.delegate.createDelegate(data.secret, data.username, data.secondSecret);
+            registration.fee = $scope.fees.delegate;
+            riseAPI.transport({
+                nethash: $scope.nethash,
+                port: $scope.port,
+                version: $scope.version
+            })
+            .postTransaction(registration)
+            .then(function () {
+              $scope.sending = false;
+              userService.setDelegateProcess(true);
+              $scope.destroy();
+              Materialize.toast('Transaction sent', 3000, 'green white-text');
+              registrationDelegateModal.deactivate();
+            })
+              .catch(function (err) {
+                $scope.sending = false;
+                userService.setDelegateProcess(false);
+                Materialize.toast('Transaction error', 3000, 'red white-text');
+                $scope.error = err.message;
+              });
 
-            $http.put("/api/delegates/", data)
-                .then(function (resp) {
-                    $scope.sending = false;
-                    userService.setDelegateProcess(resp.data.success);
-
-                    if (resp.data.success) {
-                        if ($scope.destroy) {
-                            $scope.destroy();
-                        }
-
-                        Materialize.toast('Transaction sent', 3000, 'green white-text');
-                        registrationDelegateModal.deactivate();
-                    } else {
-                        Materialize.toast('Transaction error', 3000, 'red white-text');
-                        $scope.error = resp.data.error;
-                    }
-                });
         }
     }
 

@@ -89,7 +89,8 @@ module.exports = function (grunt) {
                     mangle: false
                 },
                 files: {
-                    "static/js/app.js": files
+                    "static/js/app.js": files,
+                    "static/js/vendor_app.min.js": ['static/js/vendor_app.js']
                 }
             }
         },

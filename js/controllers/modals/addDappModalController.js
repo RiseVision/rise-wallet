@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('addDappModalController', ["$scope", "$http", "addDappModal", "userService", "feeService", "viewFactory", 'gettextCatalog', function ($scope, $http, addDappModal, userService, feeService, viewFactory, gettextCatalog) {
+angular.module('liskApp').controller('addDappModalController', ["riseAPI", "dposOffline", "$scope", "$http", "addDappModal", "userService", "feeService", "viewFactory", 'gettextCatalog', function (riseAPI, dposOffline, $scope, $http, addDappModal, userService, feeService, viewFactory, gettextCatalog) {
 
     $scope.sending = false;
     $scope.view = viewFactory;
@@ -86,19 +86,36 @@ angular.module('liskApp').controller('addDappModalController', ["$scope", "$http
         if (!$scope.sending) {
             $scope.view.inLoading = $scope.sending = true;
 
-            $http.put('/api/dapps', data).then(function (response) {
-                $scope.view.inLoading = $scope.sending = false;
+            var shiftjs = require('shift-js');
+            var transaction = shiftjs.dapp.createDapp(data.secret, data.secondSecret, {
+                name: data.name,
+                icon: data.icon,
+                category: data.category,
+                tags: data.tags,
+                type: data.type,
+                link: data.link,
+                description: data.description
+            });
+            transaction.fee = $scope.fees.dapp;
 
-                if (response.data.error) {
-                    Materialize.toast('Transaction error', 3000, 'red white-text');
-                    $scope.errorMessage = response.data.error;
-                } else {
-                    if ($scope.destroy) {
-                        $scope.destroy();
-                    }
-                    Materialize.toast('Transaction sent', 3000, 'green white-text');
-                    addDappModal.deactivate();
-                }
+            riseAPI.transport({
+                nethash: $scope.nethash,
+                port: $scope.port,
+                version: $scope.version
+            })
+            .postTransaction(transaction)
+            .then(function () {
+              $scope.view.inLoading = $scope.sending = false;
+              if ($scope.destroy) {
+                $scope.destroy();
+              }
+              Materialize.toast('Transaction sent', 3000, 'green white-text');
+              addDappModal.deactivate();
+            })
+            .catch(function(err) {
+              $scope.view.inLoading = $scope.sending = false;
+              Materialize.toast('Transaction error', 3000, 'red white-text');
+              $scope.errorMessage = err.message;
             });
         }
     }

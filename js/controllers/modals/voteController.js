@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('voteController', ["$scope", "voteModal", "$http", "userService", "feeService", "$timeout", function ($scope, voteModal, $http, userService, feeService, $timeout) {
+angular.module('liskApp').controller('voteController', ["riseAPI", "$scope", "voteModal", "$http", "userService", "feeService", "$timeout", function (riseAPI, $scope, voteModal, $http, userService, feeService, $timeout) {
 
     $scope.sending = false;
     $scope.passmode = false;
@@ -82,20 +82,28 @@ angular.module('liskApp').controller('voteController', ["$scope", "voteModal", "
 
         if (!$scope.sending) {
             $scope.sending = true;
-
-            $http.put("/api/accounts/delegates", data).then(function (resp) {
-                $scope.sending = false;
-
-                if (resp.data.error) {
-                    Materialize.toast('Transaction error', 3000, 'red white-text');
-                    $scope.fromServer = resp.data.error;
-                } else {
-                    if ($scope.destroy) {
-                        $scope.destroy();
-                    }
-                    Materialize.toast('Transaction sent', 3000, 'green white-text');
-                    voteModal.deactivate();
-                }
+            var shiftjs = require('shift-js');
+            var transaction = shiftjs.vote.createVote(data.secret, data.delegates, data.secondSecret);
+            transaction.fee = $scope.fees.vote;
+            transaction.recipientId = transaction.recipientId.replace('S','R');
+            riseAPI.transport({
+                nethash: $scope.nethash,
+                port: $scope.port,
+                version: $scope.version
+            })
+            .postTransaction(transaction)
+            .then(function () {
+              $scope.sending = false;
+              if ($scope.destroy) {
+                $scope.destroy(true);
+              }
+              voteModal.deactivate();
+              Materialize.toast('Transaction sent', 3000, 'green white-text');
+            })
+            .catch(function(err) {
+              $scope.sending = false;
+              Materialize.toast('Transaction error', 3000, 'red white-text');
+              $scope.errorMessage.fromServer = err.message;
             });
         }
     }

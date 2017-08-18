@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('newUserController', ["$scope", "$http", "newUser", "userService", "$state", "viewFactory", 'gettextCatalog', function ($scope, $http, newUser, userService, $state, viewFactory, gettextCatalog) {
+angular.module('liskApp').controller('newUserController', ["dposOffline","$scope", "$http", "newUser", "userService", "$state", "viewFactory", 'gettextCatalog', function (dposOffline, $scope, $http, newUser, userService, $state, viewFactory, gettextCatalog) {
 
     $scope.step = 1;
     $scope.noMatch = false;
@@ -35,21 +35,15 @@ angular.module('liskApp').controller('newUserController', ["$scope", "$http", "n
         if (!Mnemonic.isValid(pass) || ($scope.newPassphrase !== pass)) {
             $scope.noMatch = true;
         } else {
-            $scope.view.inLoading = true;
-            $http.post("/api/accounts/open/", { secret: pass })
-                .then(function (resp) {
-                    $scope.view.inLoading = false;
-                    if (resp.data.success) {
-                        newUser.deactivate();
-                        userService.setData(resp.data.account.address, resp.data.account.publicKey, resp.data.account.balance, resp.data.account.unconfirmedBalance, resp.data.account.effectiveBalance);
-                        userService.setForging(resp.data.account.forging);
-                        userService.setSecondPassphrase(resp.data.account.secondSignature);
-                        userService.unconfirmedPassphrase = resp.data.account.unconfirmedSignature;
-                        $state.go('main.dashboard');
-                    } else {
-                        console.error("Login failed. Failed to open account.");
-                    }
-                });
+
+          var wallet = new dposOffline.wallets.LiskLikeWallet(pass, 'R');
+          newUser.deactivate();
+          userService.setData(wallet.address, wallet.publicKey, 0,0,0);
+          userService.setForging(0);
+          userService.setSecondPassphrase(0);
+          userService.unconfirmedPassphrase = 0;
+          $state.go('main.dashboard');
+
         }
     }
 
