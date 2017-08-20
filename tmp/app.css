@@ -504,7 +504,7 @@ input:-webkit-autofill {
   height: 100%;
   margin-left: -240px;
   overflow-y: auto;
-  background: #393c3e;
+  background: #0D283C;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -745,8 +745,8 @@ input:-webkit-autofill {
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.12);
 }
 .panel.widget.widget-brown {
-  color: #393c3e;
-  border-top: 4px solid #393c3e;
+  color: #0D283C;
+  border-top: 4px solid #0D283C;
 }
 .panel.widget.widget-green {
   color: #84b84e;
@@ -993,8 +993,8 @@ input:-webkit-autofill {
   margin: 10px auto 7px;
   background-image: url('/images/rise_logo.png');
   background-repeat: no-repeat;
-  height: 48px;
-  width: 95px;
+  height: 60px;
+  width: 100px;
 }
 .white-glow {
   width: 100%;
@@ -1013,7 +1013,7 @@ input:-webkit-autofill {
 }
 #menu li.active {
   opacity: 1;
-  background-color: #393c3e;
+  background-color: #0D283C;
 }
 #menu li > a {
   display: block;
@@ -1164,7 +1164,7 @@ span.menu-text {
   opacity: 0.37;
 }
 #header {
-  background-color: #393c3e;
+  background-color: #0D283C;
   min-height: 65px;
 }
 #header .logo {
@@ -1289,7 +1289,7 @@ span.menu-text {
   border-radius: 4px;
   color: #ffffff;
   font-size: 1rem;
-  background-color: #1D5880;
+  background-color: #544835;
   min-width: 60px;
   text-align: right;
   display: inline-block;
@@ -1479,7 +1479,7 @@ span.menu-text {
 .account-block {
   color: #ffffff;
   font-size: 14px;
-  background-color: #393c3e;
+  background-color: #0D283C;
   /* box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.8) inset;
   -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.8) inset;*/
   padding: 17px 8px;
@@ -1587,15 +1587,11 @@ span.menu-text {
 .pass-window-icon {
   background-repeat: no-repeat;
   height: 100px;
-  background-color: #0D293E;
+  background-color: #0D283C;
   background-image: url('/images/logo-white.png');
   margin: -1px;
   border-radius: 4px 4px 0 0;
   background-position: center;
-  background: -webkit-linear-gradient(top, #3694D1 , #0D293E); 
-  background: -o-linear-gradient(bottom, #3694D1, #0D293E); 
-  background: -moz-linear-gradient(bottom, #3694D1, #0D293E); 
-  background: linear-gradient(to bottom, #3694D1 , #0D293E);
 }
 .pass-window-form {
   padding: 10px 25px 25px;
@@ -1713,7 +1709,7 @@ span.menu-text {
   position: relative;
 }
 .app-modal .material-modal-content .modal-header.modal-iconed {
-  background-color: #393c3e;
+  background-color: #0D283C;
   background-image: url('/images/logo-white.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -1896,7 +1892,7 @@ span.menu-text {
   position: relative;
 }
 .app-modal .modal-header.modal-iconed {
-  background-color: #393c3e;
+  background-color: #0D283C;
   background-image: url('/images/logo-white.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -1946,7 +1942,7 @@ span.menu-text {
   position: relative;
 }
 .app-modal .modal-content .modal-header.modal-iconed {
-  background-color: #393c3e;
+  background-color: #0D283C;
   background-image: url('/images/logo-white.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -2523,7 +2519,7 @@ input.delegates-search {
   color: #393939;
   font-weight: 500;
   cursor: default;
-  background-color: #393c3e;
+  background-color: #0D283C;
   border-color: none;
 }
 .paginated .pagination > .disabled > span,
@@ -4417,8 +4413,9 @@ label.imaged img {
 }
 .logo-grey {
   background-image: url('/images/logo-grey.png');
-  width: 78px;
-  height: 43px;
+  width: 100px;
+  height: 70px;
+  background-repeat: no-repeat;
 }
 .small-user-icon {
   height: 48px;

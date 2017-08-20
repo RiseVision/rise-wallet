@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('sendTransactionController', ['$scope', 'sendTransactionModal', '$http', 'userService', 'feeService', '$timeout', '$filter', function ($scope, sendTransactionModal, $http, userService, feeService, $timeout, $filter) {
+angular.module('liskApp').controller('sendTransactionController', ['riseAPI', '$scope', 'sendTransactionModal', '$http', 'userService', 'feeService', '$timeout', '$filter', function (riseAPI, $scope, sendTransactionModal, $http, userService, feeService, $timeout, $filter) {
 
     $scope.sending = false;
     $scope.passmode = false;
@@ -226,20 +226,27 @@ angular.module('liskApp').controller('sendTransactionController', ['$scope', 'se
 
         if (!$scope.sending) {
             $scope.sending = true;
-
-            $http.put('/api/transactions', data).then(function (resp) {
-                $scope.sending = false;
-
-                if (resp.data.error) {
-                    Materialize.toast('Transaction error', 3000, 'red white-text');
-                    $scope.errorMessage.fromServer = resp.data.error;
-                } else {
-                    if ($scope.destroy) {
-                        $scope.destroy();
-                    }
-                    Materialize.toast('Transaction sent', 3000, 'green white-text');
-                    sendTransactionModal.deactivate();
-                }
+            var shiftjs = require('shift-js');
+            var transaction = shiftjs.transaction.createTransaction(data.recipientId, data.amount, data.secret, data.secondSecret);
+            transaction.fee = $scope.fees.send;
+            riseAPI.transport({
+                nethash: $scope.nethash,
+                port: $scope.port,
+                version: $scope.version
+            })
+            .postTransaction(transaction)
+            .then(function () {
+              $scope.sending = false;
+              if ($scope.destroy) {
+                $scope.destroy(true);
+              }
+              sendTransactionModal.deactivate();
+              Materialize.toast('Transaction sent', 3000, 'green white-text');
+            })
+            .catch(function(err) {
+              $scope.sending = false;
+              Materialize.toast('Transaction error', 3000, 'red white-text');
+              $scope.errorMessage.fromServer = err.message;
             });
         }
     }

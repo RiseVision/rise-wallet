@@ -4,7 +4,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: partials/template.html:156
+#: partials/template.html:152
 msgid "2nd Passphrase"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgid "Block ID"
 msgstr ""
 
 #: js/controllers/blockchainController.js:8
-#: partials/template.html:111
+#: partials/template.html:107
 msgid "Blockchain"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "CANCEL"
 msgstr ""
 
-#: partials/template.html:254
+#: partials/template.html:237
 msgid "CATEGORIES"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Confirmed by"
 msgstr ""
 
-#: partials/template.html:84
+#: partials/template.html:80
 msgid "Conversations"
 msgstr ""
 
@@ -273,7 +273,7 @@ msgid "DOWNLOAD"
 msgstr ""
 
 #: js/controllers/accountController.js:8
-#: partials/template.html:72
+#: partials/template.html:68
 msgid "Dashboard"
 msgstr ""
 
@@ -281,8 +281,8 @@ msgstr ""
 msgid "Delegate Name"
 msgstr ""
 
-#: partials/template.html:244
-#: partials/template.html:98
+#: partials/template.html:227
+#: partials/template.html:94
 msgid "Delegates"
 msgstr ""
 
@@ -295,7 +295,7 @@ msgstr ""
 msgid "Disable Forging"
 msgstr ""
 
-#: js/controllers/appController.js:318
+#: js/controllers/appController.js:328
 msgid "Disabled"
 msgstr ""
 
@@ -312,7 +312,7 @@ msgstr ""
 msgid "Enable Forging"
 msgstr ""
 
-#: js/controllers/appController.js:318
+#: js/controllers/appController.js:328
 msgid "Enabled"
 msgstr ""
 
@@ -321,10 +321,6 @@ msgstr ""
 #: partials/modals/transactionInfo.html:50
 #: partials/modals/userInfo.html:100
 msgid "FEE"
-msgstr ""
-
-#: partials/template.html:228
-msgid "FORGING"
 msgstr ""
 
 #: js/controllers/dappController.js:143
@@ -365,8 +361,8 @@ msgstr ""
 #: js/controllers/delegatesController.js:9
 #: js/controllers/forgingController.js:83
 #: js/controllers/votedDelegatesController.js:8
-#: partials/template.html:241
-#: partials/template.html:90
+#: partials/template.html:224
+#: partials/template.html:86
 msgid "Forging"
 msgstr ""
 
@@ -406,7 +402,7 @@ msgstr ""
 msgid "Generator"
 msgstr ""
 
-#: partials/template.html:131
+#: partials/template.html:127
 msgid "Go to previous page"
 msgstr ""
 
@@ -414,7 +410,7 @@ msgstr ""
 msgid "Group Name"
 msgstr ""
 
-#: partials/template.html:270
+#: partials/template.html:253
 msgid "HOME"
 msgstr ""
 
@@ -430,7 +426,7 @@ msgstr ""
 msgid "INSTALL"
 msgstr ""
 
-#: partials/template.html:276
+#: partials/template.html:259
 msgid "INSTALLED"
 msgstr ""
 
@@ -518,7 +514,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: partials/template.html:162
+#: partials/template.html:158
 msgid "Logout"
 msgstr ""
 
@@ -558,7 +554,7 @@ msgstr ""
 
 #: js/controllers/walletsController.js:8
 #: partials/settings.html:12
-#: partials/template.html:78
+#: partials/template.html:74
 msgid "Multi-Signature"
 msgstr ""
 
@@ -578,16 +574,16 @@ msgstr ""
 msgid "My Multi-Signature Groups"
 msgstr ""
 
-#: partials/template.html:153
+#: partials/template.html:149
 msgid "My Profile"
 msgstr ""
 
-#: partials/template.html:104
+#: partials/template.html:100
 #: partials/votes.html:24
 msgid "My Votes"
 msgstr ""
 
-#: partials/template.html:247
+#: partials/template.html:230
 msgid "My votes ({{myVotesCount||'0'}})"
 msgstr ""
 
@@ -656,14 +652,6 @@ msgstr ""
 
 #: partials/modals/openDappModal.html:30
 msgid "OPEN ANYWAY"
-msgstr ""
-
-#: partials/template.html:231
-msgid "Off"
-msgstr ""
-
-#: partials/template.html:234
-msgid "On"
 msgstr ""
 
 #: js/controllers/forgingController.js:41
@@ -835,10 +823,14 @@ msgstr ""
 msgid "Reward"
 msgstr ""
 
-#: wallet.html:22
+#: wallet.html:25
 msgid "Rise - Blockchain Application Platform"
 msgstr ""
 
+#: js/controllers/delegatesController.js:149
+#: js/controllers/delegatesController.js:191
+#: js/controllers/votedDelegatesController.js:130
+#: js/controllers/walletPendingsController.js:43
 #: partials/modals/multisignatureModal.html:52
 msgid "Rise Address"
 msgstr ""
@@ -856,7 +848,7 @@ msgstr ""
 msgid "SAVE PASSPHRASE"
 msgstr ""
 
-#: partials/template.html:143
+#: partials/template.html:139
 msgid "SEND"
 msgstr ""
 
@@ -879,16 +871,16 @@ msgstr ""
 msgid "Search Delegates"
 msgstr ""
 
-#: partials/template.html:302
-#: partials/template.html:327
+#: partials/template.html:285
+#: partials/template.html:310
 msgid "Search for applications"
 msgstr ""
 
-#: partials/template.html:202
+#: partials/template.html:198
 msgid "Search for blocks"
 msgstr ""
 
-#: partials/template.html:176
+#: partials/template.html:172
 msgid "Search for transactions (Transaction ID, Sender address, Recipient address)"
 msgstr ""
 
@@ -915,15 +907,8 @@ msgid "Sender"
 msgstr ""
 
 #: js/controllers/settingsController.js:6
-#: partials/template.html:159
+#: partials/template.html:155
 msgid "Settings"
-msgstr ""
-
-#: js/controllers/delegatesController.js:149
-#: js/controllers/delegatesController.js:191
-#: js/controllers/votedDelegatesController.js:130
-#: js/controllers/walletPendingsController.js:43
-msgid "Rise Address"
 msgstr ""
 
 #: partials/blockchain.html:17
@@ -1037,7 +1022,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: partials/template.html:124
+#: partials/template.html:120
 msgid "Toggle navigation"
 msgstr ""
 
@@ -1116,10 +1101,6 @@ msgstr ""
 msgid "Voting for delegates"
 msgstr ""
 
-#: partials/template.html:64
-msgid "Welcome back, {{username}}"
-msgstr ""
-
 #: partials/modals/confirmDeletionModal.html:25
 msgid "YES"
 msgstr ""
@@ -1133,7 +1114,7 @@ msgid "You can find your passphrase below."
 msgstr ""
 
 #: partials/modals/vote.html:33
-msgid "You can select up to 33 delegates in one voting turn. Up to 101 delegates in total."
+msgid "You can only vote for 1 delegate per wallet address. You can unvote at any time."
 msgstr ""
 
 #: partials/dapps.html:153
@@ -1186,7 +1167,7 @@ msgstr ""
 msgid "confirm"
 msgstr ""
 
-#: partials/template.html:223
+#: partials/template.html:219
 msgid "delegate registration"
 msgstr ""
 
