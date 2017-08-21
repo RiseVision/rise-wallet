@@ -18,7 +18,7 @@
 }
 
 .account-block .address { line-height: 1.8em; }
-.account-block .icon { width:70px;height:120px;overflow: hidden;margin: 0 auto 20px;}
+.account-block .icon { width: 70px;height: 120px;overflow: hidden;margin: 0 auto 20px;border-radius: 0%;}
 
 /* Fix forge stats floating */
 .info-panel-grey {overflow:hidden;}
