@@ -45,6 +45,20 @@ angular.module('liskApp').controller('passphraseController', ['dposOffline', 'ri
         var wallet = new dposOffline.wallets.LiskLikeWallet(pass, 'R');
 
         rise.accounts.getAccount(wallet.address)
+          .catch(function (ac) {
+            if (ac.message === 'Account not found') {
+              return {
+                account: {
+                  address: wallet.address,
+                  publicKey: wallet.publicKey,
+                  balance: 0,
+                  unconfirmedBalance: 0,
+                  effectiveBalance: 0
+                }
+              }
+            }
+            return Promise.reject(ac);
+          })
           .then(function (ac) {
             var account = ac.account;
             userService.setData(account.address, account.publicKey, account.balance, account.unconfirmedBalance, account.effectiveBalance);

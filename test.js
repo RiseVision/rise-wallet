@@ -1,5 +1,5 @@
-var apiNode = 'localhost:5566';
-var apiProto = 'http';
+var apiNode = 'wallet.rise.vision';
+var apiProto = 'https';
 var express = require('express');
 var httpProxy = require('http-proxy-middleware');
 var wsProxy = httpProxy('ws://'+apiNode, {changeOrigin:true});
