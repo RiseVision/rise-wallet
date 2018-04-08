@@ -15,7 +15,11 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
     }
 
     function transformData(data, filter, params) {
-        return sliceData(orderData(filterData(data, filter), params), params);
+        return sliceData(orderData(filterData(data, filter), params), params)
+          .map(function(item) {
+              item.rate = item.rank;
+              return item;
+          });
     }
 
     var delegates = {
@@ -42,7 +46,7 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
                     cb();
                     $defer.resolve(transformedData);
                 } else {
-                    $http.get("/api/delegates/", {params: {orderBy: "rate:asc", limit: this.topRate, offset: 0}})
+                    $http.get("/api/delegates/", {params: {orderBy: "rank:asc", limit: this.topRate, offset: 0}})
                         .then(function (response) {
                             angular.copy(response.data.delegates, delegates.cachedTOP.data);
                             delegates.cachedTOP.time = new Date();
@@ -70,7 +74,7 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
                 else {
                     this.cachedStandby.data = [];
                     var getPart = function (limit, offset) {
-                        $http.get("/api/delegates/", {params: {orderBy: "rate:asc", limit: limit, offset: offset}})
+                        $http.get("/api/delegates/", {params: {orderBy: "rank:asc", limit: limit, offset: offset}})
                             .then(function (response) {
                                 if (response.data.delegates.length > 0) {
                                     delegates.cachedStandby.data = delegates.cachedStandby.data.concat(response.data.delegates);
@@ -119,7 +123,7 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
             $http.get("/api/delegates/get/", {params: {publicKey: publicKey}})
                 .then(function (response) {
                     if (response.data.success) {
-                        response.data.delegate.active = delegates.isActiveRate(response.data.delegate.rate);
+                        response.data.delegate.active = delegates.isActiveRate(response.data.delegate.rank);
                         cb(response.data.delegate);
                     } else {
                         cb({noDelegate: true, rate: 0, productivity: 0, vote: 0});
@@ -140,7 +144,7 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
                         response.data.delegate.totalCount = 0;
                     }
 
-                    response.data.delegate.active = delegates.isActiveRate(response.data.delegate.rate);
+                    response.data.delegate.active = delegates.isActiveRate(response.data.delegate.rank);
                     cb(response.data.delegate);
                 } else {
                     cb({noDelegate: true, rate: 0, productivity: 0, vote: 0, totalCount: 0});
@@ -148,7 +152,13 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
             });
         },
         getSearchList: function ($defer, search, params, filter, cb) {
-            $http.get("/api/delegates/search", {params: {q: search}})
+            var params = {params: {q: search}};
+            var endpoint = "/api/delegates/search";
+            if (search === '') {
+                endpoint = '/api/delegates'
+                params = undefined;
+            }
+            $http.get(endpoint, params)
                 .then(function (response) {
                     var delegates = angular.copy(response.data.delegates) || [];
                     params.total(delegates.length);
