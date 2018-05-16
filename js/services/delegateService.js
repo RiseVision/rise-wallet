@@ -152,13 +152,13 @@ angular.module('liskApp').service('delegateService', function ($http, $filter, $
             });
         },
         getSearchList: function ($defer, search, params, filter, cb) {
-            var params = {params: {q: search}};
-            var endpoint = "/api/delegates/search";
+            var queryParams = { params: { q: search } };
+            var endpoint    = "/api/delegates/search";
             if (search === '') {
-                endpoint = '/api/delegates'
-                params = undefined;
+                endpoint    = '/api/delegates';
+                queryParams = undefined;
             }
-            $http.get(endpoint, params)
+            $http.get(endpoint, queryParams)
                 .then(function (response) {
                     var delegates = angular.copy(response.data.delegates) || [];
                     params.total(delegates.length);
