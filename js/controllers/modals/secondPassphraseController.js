@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('secondPassphraseModalController', ['riseAPI', "$scope", "secondPassphraseModal", "$http", "userService", "feeService", function (riseAPI, $scope, secondPassphraseModal, $http, userService, feeService) {
+angular.module('liskApp').controller('secondPassphraseModalController', ['dposOffline', 'timestampService', 'riseAPI', "$scope", "secondPassphraseModal", "$http", "userService", "feeService", function (dposOffline, timestampService, riseAPI, $scope, secondPassphraseModal, $http, userService, feeService) {
 
     $scope.sending = false;
     $scope.rememberedPassphrase = userService.rememberPassphrase ? userService.rememberedPassphrase : false;
@@ -62,15 +62,22 @@ angular.module('liskApp').controller('secondPassphraseModalController', ['riseAP
     $scope.addNewPassphrase = function (pass) {
         if (!$scope.sending) {
             $scope.sending = true;
-            var shiftjs = require('shift-js');
-            var signature = shiftjs.signature.createSignature(pass, $scope.newPassphrase);
-            signature.fee = $scope.fees.secondsignature;
+            var wallet = new dposOffline.wallets.LiskLikeWallet(pass, 'R');
+            var secondWallet = new dposOffline.wallets.LiskLikeWallet($scope.newPassphrase, 'R');
+            var transaction = wallet.signTransaction(
+            new dposOffline.transactions.CreateSignatureTx({
+              signature: {publicKey: secondWallet.publicKey},
+            })
+              .set('timestamp', timestampService())
+              .set('fee', $scope.fees.secondsignature)
+            );
+
             riseAPI.transport({
                 nethash: $scope.nethash,
                 port: $scope.port,
                 version: $scope.version
             })
-            .postTransaction(signature)
+            .postTransaction(transaction)
             .then(function () {
               $scope.sending = false;
               if ($scope.destroy) {

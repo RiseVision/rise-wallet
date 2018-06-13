@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('voteController', ["riseAPI", "$scope", "voteModal", "$http", "userService", "feeService", "$timeout", function (riseAPI, $scope, voteModal, $http, userService, feeService, $timeout) {
+angular.module('liskApp').controller('voteController', ['dposOffline', 'timestampService', "riseAPI", "$scope", "voteModal", "$http", "userService", "feeService", "$timeout", function (dposOffline, timestampService, riseAPI, $scope, voteModal, $http, userService, feeService, $timeout) {
 
     $scope.sending = false;
     $scope.passmode = false;
@@ -82,10 +82,27 @@ angular.module('liskApp').controller('voteController', ["riseAPI", "$scope", "vo
 
         if (!$scope.sending) {
             $scope.sending = true;
-            var shiftjs = require('shift-js');
-            var transaction = shiftjs.vote.createVote(data.secret, data.delegates, data.secondSecret);
-            transaction.fee = $scope.fees.vote;
-            transaction.recipientId = transaction.recipientId.replace('S','R');
+            var secondWallet = null;
+            if (data.secondSecret) {
+              secondWallet = new dposOffline.wallets.LiskLikeWallet(data.secondSecret, 'R');
+            }
+            var wallet = new dposOffline.wallets.LiskLikeWallet(data.secret, 'R');
+            var transaction = wallet.signTransaction(
+              new dposOffline.transactions.VoteTx({
+                votes: data.delegates,
+              })
+                .set('fee', $scope.fees.vote)
+                .set('recipientId', wallet.address)
+                .set('timestamp', timestampService())
+                , secondWallet);
+
+            try {
+              userService.checkWallets(wallet, secondWallet);
+            } catch (e) {
+              $scope.sending = false;
+              $scope.errorMessage.fromServer = err.message;
+              return;
+            }
             riseAPI.transport({
                 nethash: $scope.nethash,
                 port: $scope.port,

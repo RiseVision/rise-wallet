@@ -4,7 +4,7 @@ angular.module('liskApp').service('userService', function () {
 
     this.rememberPassphrase = false;
     this.rememberedPassphrase = '';
-
+    this.secondPublicKey = null;
     this.setData = function (address, publicKey, balance, unconfirmedBalance, effectiveBalance) {
         this.address = address;
         this.publicKey = publicKey;
@@ -43,6 +43,17 @@ angular.module('liskApp').service('userService', function () {
 
     this.setSecondPassphrase = function (secondPassPhrase) {
         this.secondPassphrase = secondPassPhrase;
+    }
+
+    this.checkWallets = function(w1, w2) {
+        if (w1.address != this.address) {
+            throw new Error('Wrong passphrase');
+        }
+        if (this.secondPublicKey && !w2) {
+          throw new Error('Missing second passphrase. Please reload wallet');
+        } else if (this.secondPublicKey && w2.publicKey !== this.secondPublicKey) {
+          throw new Error('Wrong second passphrase');
+        }
     }
 
 });

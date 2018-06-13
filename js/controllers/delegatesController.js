@@ -239,7 +239,7 @@ angular.module('liskApp').controller('delegatesController', ['$scope', '$rootSco
     };
     // end Standby delegates
 
-    $scope.$on('updateControllerData', function (event, data) {
+    $rootScope.$on('updateControllerData', function (event, data) {
         if (data.indexOf('main.delegates') != -1) {
             $scope.updateStandby();
             $scope.updateTop();

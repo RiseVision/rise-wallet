@@ -148,7 +148,7 @@ angular.module('liskApp').controller('votedDelegatesController', ['$scope', '$ro
         $scope.updateMyDelegates();
     }, 1000 * 10);
 
-    $scope.$on('updateControllerData', function (event, data) {
+    $rootScope.$on('updateControllerData', function (event, data) {
         if (data.indexOf('main.votes') != -1) {
             $scope.updateMyDelegates();
         }

@@ -81,7 +81,7 @@ angular.module('liskApp').controller('transactionsController', ['$scope', '$root
     $scope.$on('$destroy', function () {
     });
 
-    $scope.$on('updateControllerData', function (event, data) {
+    $rootScope.$on('updateControllerData', function (event, data) {
         if (data.indexOf('main.transactions') != -1) {
             $scope.updateTransactions();
         }

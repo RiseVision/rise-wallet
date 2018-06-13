@@ -1,6 +1,7 @@
 require('angular');
 
-angular.module('liskApp').controller('sendTransactionController', ['riseAPI', '$scope', 'sendTransactionModal', '$http', 'userService', 'feeService', '$timeout', '$filter', function (riseAPI, $scope, sendTransactionModal, $http, userService, feeService, $timeout, $filter) {
+angular.module('liskApp').controller('sendTransactionController',
+  ['dposOffline', 'timestampService', 'riseAPI', '$scope', 'sendTransactionModal', '$http', 'userService', 'feeService', '$timeout', '$filter', function (dposOffline, timestampService, riseAPI, $scope, sendTransactionModal, $http, userService, feeService, $timeout, $filter) {
 
     $scope.sending = false;
     $scope.passmode = false;
@@ -226,9 +227,25 @@ angular.module('liskApp').controller('sendTransactionController', ['riseAPI', '$
 
         if (!$scope.sending) {
             $scope.sending = true;
-            var shiftjs = require('shift-js');
-            var transaction = shiftjs.transaction.createTransaction(data.recipientId, data.amount, data.secret, data.secondSecret);
-            transaction.fee = $scope.fees.send;
+            var wallet = new dposOffline.wallets.LiskLikeWallet(data.secret, 'R');
+            var secondWallet = null;
+            if (data.secondSecret) {
+                secondWallet = new dposOffline.wallets.LiskLikeWallet(data.secondSecret, 'R');
+            }
+            try {
+              userService.checkWallets(wallet,secondWallet);
+            } catch (e) {
+              $scope.errorMessage.fromServer = e.message;
+              $scope.sending = false;
+              return;
+            }
+            var transaction = wallet.signTransaction(new dposOffline.transactions.SendTx()
+              .set('recipientId', data.recipientId)
+              .set('amount', data.amount)
+              .set('timestamp', timestampService())
+              .set('fee', $scope.fees.send),
+              secondWallet
+            );
             riseAPI.transport({
                 nethash: $scope.nethash,
                 port: $scope.port,

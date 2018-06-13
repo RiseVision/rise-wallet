@@ -157,7 +157,7 @@ angular.module('liskApp').controller('walletsController', ['$scope', '$rootScope
     });
     // end
 
-    $scope.$on('updateControllerData', function (event, data) {
+    $rootScope.$on('updateControllerData', function (event, data) {
         if (data.indexOf('main.multi') != -1) {
             $scope.updateWallets();
         }

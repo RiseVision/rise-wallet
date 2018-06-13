@@ -32,14 +32,7 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
     }
 
     $scope.getCategories = function () {
-        $http.get("/api/dapps/categories").then(function (response) {
-            if (response.data.success) {
-                $scope.categories = response.data.categories;
-            } else {
-                $scope.categories = {};
-            }
-        });
-
+      $scope.categories = {};
     }
 
     $scope.collapseMenu = function () {
@@ -107,18 +100,18 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
         'main.forging',
         'main.blockchain',
         'passphrase',
-        'main.dappstore',
+        // 'main.dappstore',
         'main.multi'
     ];
 
     $scope.getPriceTicker = function () {
-        $http.get("https://explorer-new.rise.vision/api/getPriceTicker")
-            .then(function (response) {
-                $scope.btc_usd = response.data.tickers.BTC.USD;
-                $scope.rise_btc = response.data.tickers.RISE.BTC;
-                $scope.rise_usd = response.data.tickers.RISE.USD;
-                $scope.rise_eur = response.data.tickers.RISE.EUR; 
-            });
+        // $http.get("https://explorer-new.rise.vision/api/getPriceTicker")
+        //     .then(function (response) {
+        //         $scope.btc_usd = response.data.tickers.BTC.USD;
+        //         $scope.rise_btc = response.data.tickers.RISE.BTC;
+        //         $scope.rise_usd = response.data.tickers.RISE.USD;
+        //         $scope.rise_eur = response.data.tickers.RISE.EUR;
+        //     });
     };
 
     $scope.getVersion = function () {
@@ -216,12 +209,7 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
     };
 
     $scope.getMasterPassphrase = function () {
-        $http.get("api/dapps/ismasterpasswordenabled")
-            .then(function (resp) {
-                if (resp.data.success) {
-                    $scope.ismasterpasswordenabled = resp.data.enabled;
-                }
-            });
+      $scope.ismasterpasswordenabled = false;
     }
 
     $scope.sendTransaction = function (to) {
@@ -333,14 +321,11 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
     }
 
     $scope.getForging = function (cb) {
-        $http.get("/api/delegates/forging/status", {params: {publicKey: userService.publicKey}})
-            .then(function (resp) {
-                $scope.forging = resp.data.enabled;
-                $scope.dataToShow.forging = $scope.forging;
-                userService.setForging($scope.forging);
-                cb($scope.forging);
-            });
-    }
+      $scope.forging = false;
+      $scope.dataToShow.forging = false;
+      userService.setForging($scope.forging);
+      cb($scope.forging);
+    };
 
     $scope.getMultisignatureAccounts = function (cb) {
         var queryParams = {
@@ -464,11 +449,13 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
 
     $scope.$on('socket:transactions/change', function (ev, data) {
         $scope.getAppData();
-        $scope.updateViews([
+        $timeout(function () {
+          $scope.updateViews([
             'main.transactions',
             'main.multi',
             'main.dashboard'
-        ]);
+          ]);
+        }, 200);
     });
 
     $scope.$on('socket:blocks/change', function (ev, data) {
@@ -495,12 +482,6 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
             'main.votes',
             'main.forging'
         ]);
-    })
-
-    $scope.$on('socket:dapps/change', function (ev, data) {
-        $scope.updateViews([
-            'main.dapps'
-        ]);
     });
 
     $scope.$on('socket:multisignatures/change', function (ev, data) {
@@ -524,7 +505,7 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
 
     $scope.updateViews = function (views) {
         $timeout(function () {
-            $scope.$broadcast('updateControllerData', views);
+            $rootScope.$broadcast('updateControllerData', views);
         });
     }
 

@@ -77,7 +77,10 @@ angular.module('liskApp').controller('accountController', ['$state','$scope', '$
                     address: userService.address
                 }
             }).then(function (resp) {
-                var unconfirmedTransactions = resp.data.transactions;
+                var unconfirmedTransactions = resp.data.transactions.map(function (tx) {
+                    tx.unconfirmed = true;
+                    return tx;
+                });
 
                 $timeout(function () {
                     $scope.transactions = _.compact(
@@ -98,6 +101,7 @@ angular.module('liskApp').controller('accountController', ['$state','$scope', '$
                 userService.u_multisignatures = account.u_multisignatures;
                 userService.unconfirmedBalance = account.unconfirmedBalance ;
                 userService.secondPassphrase = account.secondSignature || account.unconfirmedSignature;
+                userService.secondPublicKey = account.secondPublicKey;
                 userService.unconfirmedPassphrase = account.unconfirmedSignature;
                 $scope.balance = userService.balance;
                 $scope.unconfirmedBalance = userService.unconfirmedBalance;
@@ -155,8 +159,7 @@ angular.module('liskApp').controller('accountController', ['$state','$scope', '$
         });
     }
 
-    $scope.$on('updateControllerData', function (event, data) {
-        $scope.$$listeners.updateControllerData.splice(1);
+    $rootScope.$on('updateControllerData', function (event, data) {
         if ((data.indexOf('main.dashboard') != -1 && $state.current.name == 'main.dashboard') || data.indexOf('main.transactions') != -1) {
             $scope.updateAppView();
         }

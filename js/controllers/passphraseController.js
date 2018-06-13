@@ -64,6 +64,7 @@ angular.module('liskApp').controller('passphraseController', ['dposOffline', 'ri
             userService.setData(account.address, account.publicKey, account.balance, account.unconfirmedBalance, account.effectiveBalance);
             userService.setForging(account.forging);
             userService.setSecondPassphrase(account.secondSignature);
+            userService.secondPublicKey = account.secondPublicKey;
             if (remember) {
               userService.setSessionPassphrase(pass);
             }

@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('registrationDelegateModalController', ['riseAPI', "$scope", "registrationDelegateModal", "$http", "userService", "feeService", "delegateService", function (riseAPI, $scope, registrationDelegateModal, $http, userService, feeService, delegateService) {
+angular.module('liskApp').controller('registrationDelegateModalController', ['dposOffline', 'timestampService', 'riseAPI', "$scope", "registrationDelegateModal", "$http", "userService", "feeService", "delegateService", function (dposOffline, timestampService, riseAPI, $scope, registrationDelegateModal, $http, userService, feeService, delegateService) {
 
     $scope.error = null;
     $scope.sending = false;
@@ -103,15 +103,34 @@ angular.module('liskApp').controller('registrationDelegateModalController', ['ri
 
         if (!$scope.sending) {
             $scope.sending = true;
-            var shiftjs = require('shift-js');
-            var registration = shiftjs.delegate.createDelegate(data.secret, data.username, data.secondSecret);
-            registration.fee = $scope.fees.delegate;
+
+            var wallet = new dposOffline.wallets.LiskLikeWallet(data.secret, 'R');
+            var secondWallet = null;
+            if (data.secondSecret) {
+              secondWallet = new dposOffline.wallets.LiskLikeWallet(data.secondSecret, 'R');
+            }
+            try {
+                userService.checkWallets(wallet, secondWallet);
+            } catch (e) {
+              $scope.sending = false;
+              $scope.error = e.message;
+              return;
+            }
+            var transaction = wallet.signTransaction(new dposOffline.transactions.DelegateTx({
+                delegate: {
+                    username: data.username
+                }
+              })
+                .set('timestamp', timestampService())
+                .set('fee', $scope.fees.delegate),
+              secondWallet
+            );
             riseAPI.transport({
                 nethash: $scope.nethash,
                 port: $scope.port,
                 version: $scope.version
             })
-            .postTransaction(registration)
+            .postTransaction(transaction)
             .then(function () {
               $scope.sending = false;
               userService.setDelegateProcess(true);

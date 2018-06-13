@@ -201,7 +201,7 @@ angular.module('liskApp').controller('forgingController', ['$scope', '$rootScope
             });
     };
 
-    $scope.$on('updateControllerData', function (event, data) {
+    $rootScope.$on('updateControllerData', function (event, data) {
         if (data.indexOf('main.forging') != -1 && userService.username) {
             $scope.updateBlocks();
             $scope.getForgedAmount();
