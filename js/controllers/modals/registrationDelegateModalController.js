@@ -118,7 +118,8 @@ angular.module('liskApp').controller('registrationDelegateModalController', ['dp
             }
             var transaction = wallet.signTransaction(new dposOffline.transactions.DelegateTx({
                 delegate: {
-                    username: data.username
+                    username: data.username,
+                    publicKey: wallet.publicKey
                 }
               })
                 .set('timestamp', timestampService())
