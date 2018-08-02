@@ -7,6 +7,7 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
     $scope.searchBlocks = blockService;
     $scope.toggled = false;
     $scope.rememberedPassphrase = userService.rememberPassphrase ? userService.rememberedPassphrase : false;
+    $scope.usingLedger = userService.usingLedger;
     $scope.lisk_usd = $scope.lisk_btc = $scope.lisk_eur = 0;
     $scope.version = 'version load';
     $scope.diffVersion = 0;
@@ -177,7 +178,7 @@ angular.module('liskApp').controller('appController', ['riseAPI', 'dappsService'
                     userService.u_multisignatures = account.u_multisignatures;
                     userService.secondPassphrase = account.secondSignature || account.unconfirmedSignature;
                     userService.unconfirmedPassphrase = account.unconfirmedSignature;
-                    
+
                 }
 
                 $scope.balance = userService.balance;

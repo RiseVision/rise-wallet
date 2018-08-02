@@ -2,6 +2,7 @@ require('angular');
 
 angular.module('liskApp').service('userService', function () {
 
+    this.usingLedger = false;
     this.rememberPassphrase = false;
     this.rememberedPassphrase = '';
     this.secondPublicKey = null;
@@ -14,6 +15,8 @@ angular.module('liskApp').service('userService', function () {
         this._balance = balance;
         this._unconfirmedBalance = unconfirmedBalance;
     }
+
+
 
     this.setSessionPassphrase = function (pass) {
         this.rememberPassphrase = true;

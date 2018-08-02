@@ -1,6 +1,8 @@
 require('angular');
 
-angular.module('liskApp').controller('registrationDelegateModalController', ['dposOffline', 'timestampService', 'riseAPI', "$scope", "registrationDelegateModal", "$http", "userService", "feeService", "delegateService", function (dposOffline, timestampService, riseAPI, $scope, registrationDelegateModal, $http, userService, feeService, delegateService) {
+angular.module('liskApp').controller('registrationDelegateModalController',
+  ['txService', 'dposOffline', 'timestampService', 'riseAPI', "$scope", "registrationDelegateModal", "$http", "userService", "feeService", "delegateService",
+  function (txService, dposOffline, timestampService, riseAPI, $scope, registrationDelegateModal, $http, userService, feeService, delegateService) {
 
     $scope.error = null;
     $scope.sending = false;
@@ -58,7 +60,7 @@ angular.module('liskApp').controller('registrationDelegateModalController', ['dp
             return;
         }
 
-        if ($scope.rememberedPassphrase) {
+        if ($scope.rememberedPassphrase || userService.usingLedger) {
             validateUsername(function () {
                 $scope.error = null;
                 $scope.registrationDelegate($scope.rememberedPassphrase);
@@ -103,48 +105,36 @@ angular.module('liskApp').controller('registrationDelegateModalController', ['dp
 
         if (!$scope.sending) {
             $scope.sending = true;
+            if (userService.usingLedger) {
+                Materialize.toast('Check your Ledger', 3000, 'orange white-text');
+            }
+            txService
+                .signAndBroadcast(
+                    new dposOffline.transactions.DelegateTx({
+                        delegate: {
+                            username: data.username,
+                            publicKey: userService.publicKey, // TODO: to be removed
+                        }
+                    })
+                        .set('timestamp', timestampService())
+                        .set('fee', $scope.fees.delegate),
+                    data.secret,
+                    data.secondSecret
+                )
+                .then(function () {
+                    $scope.sending = false;
+                    $scope.destroy();
+                    userService.setDelegateProcess(true);
+                    Materialize.toast('Transaction sent', 3000, 'green white-text');
+                    registrationDelegateModal.deactivate();
 
-            var wallet = new dposOffline.wallets.LiskLikeWallet(data.secret, 'R');
-            var secondWallet = null;
-            if (data.secondSecret) {
-              secondWallet = new dposOffline.wallets.LiskLikeWallet(data.secondSecret, 'R');
-            }
-            try {
-                userService.checkWallets(wallet, secondWallet);
-            } catch (e) {
-              $scope.sending = false;
-              $scope.error = e.message;
-              return;
-            }
-            var transaction = wallet.signTransaction(new dposOffline.transactions.DelegateTx({
-                delegate: {
-                    username: data.username,
-                    publicKey: wallet.publicKey
-                }
-              })
-                .set('timestamp', timestampService())
-                .set('fee', $scope.fees.delegate),
-              secondWallet
-            );
-            riseAPI.transport({
-                nethash: $scope.nethash,
-                port: $scope.port,
-                version: $scope.version
-            })
-            .postTransaction(transaction)
-            .then(function () {
-              $scope.sending = false;
-              userService.setDelegateProcess(true);
-              $scope.destroy();
-              Materialize.toast('Transaction sent', 3000, 'green white-text');
-              registrationDelegateModal.deactivate();
-            })
-              .catch(function (err) {
-                $scope.sending = false;
-                userService.setDelegateProcess(false);
-                Materialize.toast('Transaction error', 3000, 'red white-text');
-                $scope.error = err.message;
-              });
+                })
+                .catch(function (err) {
+                    $scope.sending = false;
+                    userService.setDelegateProcess(false);
+                    Materialize.toast('Transaction error', 3000, 'red white-text');
+                    $scope.error = err.message;
+                });
 
         }
     }

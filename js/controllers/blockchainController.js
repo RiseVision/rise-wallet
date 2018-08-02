@@ -59,7 +59,6 @@ angular.module('liskApp').controller('blockchainController', ['$scope', '$timeou
     // end Blocks
 
     $rootScope.$on('updateControllerData', function (event, data) {
-        console.log('meow', data);
         if (data.indexOf('main.blockchain') != -1) {
             $scope.updateBlocks();
         }

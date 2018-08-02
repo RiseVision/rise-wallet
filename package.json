@@ -33,6 +33,7 @@
     "jit-grunt": "=0.10.0"
   },
   "dependencies": {
+    "@ledgerhq/hw-transport-u2f": "^4.21.0",
     "angular": "=1.5.8",
     "angular-animate": "=1.5.8",
     "angular-chart.js": "=0.10.2",
@@ -44,16 +45,18 @@
     "angular-route": "=1.5.8",
     "angular-socket-io": "=0.7.0",
     "angular-ui-router": "=0.3.1",
+    "babel-runtime": "^6.26.0",
     "bitcore-mnemonic": "=1.1.1",
     "bower": "=1.7.9",
     "browserify-angular-animate": "=1.2.18",
     "buffer": "=4.9.1",
     "chart.js": "=1.0.2",
     "compare-version": "=0.1.2",
+    "dpos-ledger-api": "^1.1.0",
     "dpos-offline": "=1.6.0",
     "ng-table": "=0.5.4",
     "requests": "0.1.7",
-    "risejs": "^1.1.1",
+    "risejs": "^1.4.0",
     "shift-js": "https://github.com/ShiftNrg/shift-js/tarball/master",
     "socket.io": "=1.4.8"
   }

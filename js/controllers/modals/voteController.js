@@ -1,6 +1,6 @@
 require('angular');
 
-angular.module('liskApp').controller('voteController', ['dposOffline', 'timestampService', "riseAPI", "$scope", "voteModal", "$http", "userService", "feeService", "$timeout", function (dposOffline, timestampService, riseAPI, $scope, voteModal, $http, userService, feeService, $timeout) {
+angular.module('liskApp').controller('voteController', ['txService', 'dposOffline', 'timestampService', "riseAPI", "$scope", "voteModal", "$http", "userService", "feeService", "$timeout", function (txService, dposOffline, timestampService, riseAPI, $scope, voteModal, $http, userService, feeService, $timeout) {
 
     $scope.sending = false;
     $scope.passmode = false;
@@ -29,7 +29,7 @@ angular.module('liskApp').controller('voteController', ['dposOffline', 'timestam
             $scope.secretPhrase = '';
             return;
         }
-        if ($scope.rememberedPassphrase) {
+        if ($scope.rememberedPassphrase || userService.usingLedger) {
             $scope.vote($scope.rememberedPassphrase);
         } else {
             $scope.passmode = !$scope.passmode;
@@ -82,46 +82,34 @@ angular.module('liskApp').controller('voteController', ['dposOffline', 'timestam
 
         if (!$scope.sending) {
             $scope.sending = true;
-            var secondWallet = null;
-            if (data.secondSecret) {
-              secondWallet = new dposOffline.wallets.LiskLikeWallet(data.secondSecret, 'R');
+            if (userService.usingLedger) {
+                Materialize.toast('Check your Ledger', 3000, 'orange white-text');
             }
-            var wallet = new dposOffline.wallets.LiskLikeWallet(data.secret, 'R');
-            var transaction = wallet.signTransaction(
-              new dposOffline.transactions.VoteTx({
-                votes: data.delegates,
-              })
-                .set('fee', $scope.fees.vote)
-                .set('recipientId', wallet.address)
-                .set('timestamp', timestampService())
-                , secondWallet);
+            txService
+                .signAndBroadcast(
+                    new dposOffline.transactions.VoteTx({
+                        votes: data.delegates,
+                    })
+                        .set('fee', $scope.fees.vote)
+                        .set('recipientId', userService.address)
+                        .set('timestamp', timestampService()),
+                    data.secret,
+                    data.secondSecret
+                )
+                .then(function () {
+                    $scope.sending = false;
+                    if ($scope.destroy) {
+                        $scope.destroy(true);
+                    }
+                    voteModal.deactivate();
+                    Materialize.toast('Transaction sent', 3000, 'green white-text');
+                })
+                .catch(function (err) {
+                    $scope.sending = false;
+                    Materialize.toast('Transaction error', 3000, 'red white-text');
+                    $scope.errorMessage.fromServer = err.message;
+                });
 
-            try {
-              userService.checkWallets(wallet, secondWallet);
-            } catch (e) {
-              $scope.sending = false;
-              $scope.errorMessage.fromServer = err.message;
-              return;
-            }
-            riseAPI.transport({
-                nethash: $scope.nethash,
-                port: $scope.port,
-                version: $scope.version
-            })
-            .postTransaction(transaction)
-            .then(function () {
-              $scope.sending = false;
-              if ($scope.destroy) {
-                $scope.destroy(true);
-              }
-              voteModal.deactivate();
-              Materialize.toast('Transaction sent', 3000, 'green white-text');
-            })
-            .catch(function(err) {
-              $scope.sending = false;
-              Materialize.toast('Transaction error', 3000, 'red white-text');
-              $scope.errorMessage.fromServer = err.message;
-            });
         }
     }
 

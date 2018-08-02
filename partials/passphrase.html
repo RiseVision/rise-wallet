@@ -4,7 +4,8 @@
         <div class="pass-window">
             <div class="pass-window-icon">
             </div>
-            <form class="clearfix pass-window-form" _lpchecked="1" ng-submit="login(pass, rememberPassphrase)">
+          <div class="pass-window-form">
+            <form class="clearfix" _lpchecked="1" ng-submit="login(pass, rememberPassphrase)">
               <div class="input-field">
                   <input id="password" type="password" ng-model="pass" ng-trim="false" autofocus>
                   <label for="password"><translate>Your Passphrase</translate></label>
@@ -27,6 +28,11 @@
                   <a class="btn btn-blue waves-effect waves-light" ng-click="login(pass, rememberPassphrase)" ng-disabled="!pass"><translate>SIGN IN</translate></a>
               </div>
             </form>
+
+            <div class="buttons-panel pull-right">
+              <a class="btn btn-blue waves-effect waves-light" ng-click="ledgerLogin()"><translate>Login with Ledger</translate></a>
+            </div>
+          </div>
         </div>
 
         <div class="pass-footer clearfix">Rise © <span>2016 - {{date | date:'yyyy'}}</span>. All Rights Reserved.</div>

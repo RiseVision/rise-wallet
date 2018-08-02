@@ -1,7 +1,8 @@
 require('angular');
 
 angular.module('liskApp').controller('sendTransactionController',
-  ['dposOffline', 'timestampService', 'riseAPI', '$scope', 'sendTransactionModal', '$http', 'userService', 'feeService', '$timeout', '$filter', function (dposOffline, timestampService, riseAPI, $scope, sendTransactionModal, $http, userService, feeService, $timeout, $filter) {
+  ['txService', 'dposOffline', 'timestampService', 'riseAPI', '$scope', 'sendTransactionModal', '$http', 'userService', 'feeService', '$timeout', '$filter',
+    function (txService, dposOffline, timestampService, riseAPI, $scope, sendTransactionModal, $http, userService, feeService, $timeout, $filter) {
 
     $scope.sending = false;
     $scope.passmode = false;
@@ -77,7 +78,7 @@ angular.module('liskApp').controller('sendTransactionController',
             $scope.secretPhrase = '';
             return;
         }
-        if ($scope.rememberedPassphrase) {
+        if ($scope.rememberedPassphrase || userService.usingLedger) {
             validateForm(function () {
                 $scope.presendError = false;
                 $scope.errorMessage = {};
@@ -213,10 +214,10 @@ angular.module('liskApp').controller('sendTransactionController',
             amount: $scope.convertRISE($scope.amount),
             recipientId: $scope.to
         };
-		
-		if (userService.publicKey) {
-			data.publicKey = userService.publicKey;
-		}		
+
+        if (userService.publicKey) {
+          data.publicKey = userService.publicKey;
+        }
 
         if ($scope.secondPassphrase) {
             data.secondSecret = $scope.secondPhrase;
@@ -227,44 +228,32 @@ angular.module('liskApp').controller('sendTransactionController',
 
         if (!$scope.sending) {
             $scope.sending = true;
-            var wallet = new dposOffline.wallets.LiskLikeWallet(data.secret, 'R');
-            var secondWallet = null;
-            if (data.secondSecret) {
-                secondWallet = new dposOffline.wallets.LiskLikeWallet(data.secondSecret, 'R');
+            if (userService.usingLedger) {
+                Materialize.toast('Check your Ledger', 3000, 'orange white-text');
             }
-            try {
-              userService.checkWallets(wallet,secondWallet);
-            } catch (e) {
-              $scope.errorMessage.fromServer = e.message;
-              $scope.sending = false;
-              return;
-            }
-            var transaction = wallet.signTransaction(new dposOffline.transactions.SendTx()
-              .set('recipientId', data.recipientId)
-              .set('amount', data.amount)
-              .set('timestamp', timestampService())
-              .set('fee', $scope.fees.send),
-              secondWallet
-            );
-            riseAPI.transport({
-                nethash: $scope.nethash,
-                port: $scope.port,
-                version: $scope.version
-            })
-            .postTransaction(transaction)
-            .then(function () {
-              $scope.sending = false;
-              if ($scope.destroy) {
-                $scope.destroy(true);
-              }
-              sendTransactionModal.deactivate();
-              Materialize.toast('Transaction sent', 3000, 'green white-text');
-            })
-            .catch(function(err) {
-              $scope.sending = false;
-              Materialize.toast('Transaction error', 3000, 'red white-text');
-              $scope.errorMessage.fromServer = err.message;
-            });
+            txService
+                .signAndBroadcast(
+                    new dposOffline.transactions.SendTx()
+                        .set('recipientId', data.recipientId)
+                        .set('amount', data.amount)
+                        .set('timestamp', timestampService())
+                        .set('fee', $scope.fees.send),
+                    data.secret,
+                    data.secondSecret
+                )
+                .then(function () {
+                    $scope.sending = false;
+                    if ($scope.destroy) {
+                        $scope.destroy(true);
+                    }
+                    sendTransactionModal.deactivate();
+                    Materialize.toast('Transaction sent', 3000, 'green white-text');
+                })
+                .catch(function (err) {
+                    $scope.sending = false;
+                    Materialize.toast('Transaction error', 3000, 'red white-text');
+                    $scope.errorMessage.fromServer = err.message;
+                });
         }
     }
 

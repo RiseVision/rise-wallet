@@ -10,3 +10,5 @@ require('../../js/services/feeService.js');
 require('../../js/services/riseService.js');
 require('../../js/services/timestampService.js');
 require('../../js/services/dposOfflineService.js');
+require('../../js/services/ledgernano.js');
+require('../../js/services/txService.js');

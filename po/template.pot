@@ -295,7 +295,7 @@ msgstr ""
 msgid "Disable Forging"
 msgstr ""
 
-#: js/controllers/appController.js:316
+#: js/controllers/appController.js:317
 msgid "Disabled"
 msgstr ""
 
@@ -312,7 +312,7 @@ msgstr ""
 msgid "Enable Forging"
 msgstr ""
 
-#: js/controllers/appController.js:316
+#: js/controllers/appController.js:317
 msgid "Enabled"
 msgstr ""
 
@@ -514,6 +514,10 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
+#: partials/passphrase.html:33
+msgid "Login with Ledger"
+msgstr ""
+
 #: partials/template.html:158
 msgid "Logout"
 msgstr ""
@@ -587,7 +591,7 @@ msgstr ""
 msgid "My votes ({{myVotesCount||'0'}})"
 msgstr ""
 
-#: partials/passphrase.html:26
+#: partials/passphrase.html:27
 msgid "NEW ACCOUNT"
 msgstr ""
 
@@ -809,7 +813,7 @@ msgstr ""
 msgid "Registering user"
 msgstr ""
 
-#: partials/passphrase.html:18
+#: partials/passphrase.html:19
 msgid "Remember during this session"
 msgstr ""
 
@@ -823,6 +827,7 @@ msgstr ""
 msgid "Reward"
 msgstr ""
 
+#: index.html:25
 #: wallet.html:25
 msgid "Rise - Blockchain Application Platform"
 msgstr ""
@@ -852,7 +857,7 @@ msgstr ""
 msgid "SEND"
 msgstr ""
 
-#: partials/passphrase.html:27
+#: partials/passphrase.html:28
 msgid "SIGN IN"
 msgstr ""
 
@@ -1149,7 +1154,7 @@ msgstr ""
 #: partials/modals/registrationDelegateModal.html:60
 #: partials/modals/sendTransaction.html:71
 #: partials/modals/vote.html:63
-#: partials/passphrase.html:10
+#: partials/passphrase.html:11
 msgid "Your Passphrase"
 msgstr ""
 
