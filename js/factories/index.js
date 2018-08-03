@@ -23,3 +23,4 @@ require('../../js/factories/modals/errorModal');
 require('../../js/factories/modals/masterPassphraseModal');
 require('../../js/factories/modals/confirmDeletionModal');
 require('../../js/factories/modals/openDappModal');
+require('../../js/factories/modals/ledgerConfirmAddressModal');

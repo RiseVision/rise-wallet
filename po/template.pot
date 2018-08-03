@@ -200,6 +200,10 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: partials/modals/ledgerConfirmAddressModal.html:7
+msgid "Confirm Address in Ledger"
+msgstr ""
+
 #: partials/modals/confirmDeletionModal.html:13
 msgid "Confirmation"
 msgstr ""
@@ -514,10 +518,6 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: partials/passphrase.html:33
-msgid "Login with Ledger"
-msgstr ""
-
 #: partials/template.html:158
 msgid "Logout"
 msgstr ""
@@ -591,7 +591,7 @@ msgstr ""
 msgid "My votes ({{myVotesCount||'0'}})"
 msgstr ""
 
-#: partials/passphrase.html:27
+#: partials/passphrase.html:26
 msgid "NEW ACCOUNT"
 msgstr ""
 
@@ -813,7 +813,7 @@ msgstr ""
 msgid "Registering user"
 msgstr ""
 
-#: partials/passphrase.html:19
+#: partials/passphrase.html:18
 msgid "Remember during this session"
 msgstr ""
 
@@ -857,7 +857,7 @@ msgstr ""
 msgid "SEND"
 msgstr ""
 
-#: partials/passphrase.html:28
+#: partials/passphrase.html:27
 msgid "SIGN IN"
 msgstr ""
 
@@ -1154,7 +1154,7 @@ msgstr ""
 #: partials/modals/registrationDelegateModal.html:60
 #: partials/modals/sendTransaction.html:71
 #: partials/modals/vote.html:63
-#: partials/passphrase.html:11
+#: partials/passphrase.html:10
 msgid "Your Passphrase"
 msgstr ""
 

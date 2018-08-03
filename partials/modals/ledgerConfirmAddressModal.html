@@ -1,0 +1,15 @@
+<div class="app-modal valign-wrapper">
+    <div class="container height100">
+        <div class="row height100">
+            <div class="col-md-9 col-md-offset-2 height100 valign-wrapper">
+                <div class="modal-content" ng-click="$event.stopPropagation();">
+                    <div class="modal-header">
+                        <h2>{{'Confirm Address in Ledger'|translate}}</h2>
+                        <img src="/images/ledger-confirm-address.png">
+                        <input id="blockId" class="clipboard" value="{{address}}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

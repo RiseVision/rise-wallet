@@ -1,7 +1,7 @@
 require('angular');
 
-angular.module('liskApp').controller('passphraseController', ['ledgerNano', 'dposOffline', 'riseAPI', '$scope', '$rootScope', '$http', "$state", "userService", "newUser", 'gettextCatalog', '$cookies',
-  function (ledgerNano, dposOffline, rise, $rootScope, $scope, $http, $state, userService, newUser, gettextCatalog, $cookies) {
+angular.module('liskApp').controller('passphraseController', ['ledgerConfirmAddressModal', 'ledgerNano', 'dposOffline', 'riseAPI', '$scope', '$rootScope', '$http', "$state", "userService", "newUser", 'gettextCatalog', '$cookies',
+  function (ledgerConfirmAddressModal, ledgerNano, dposOffline, rise, $rootScope, $scope, $http, $state, userService, newUser, gettextCatalog, $cookies) {
 
     userService.setData();
     userService.rememberPassphrase = false;
@@ -12,10 +12,34 @@ angular.module('liskApp').controller('passphraseController', ['ledgerNano', 'dpo
     $scope.ledgerLoading = true;
 	  $scope.date = new Date();
     ledgerNano.load
-      .then(function (r) {
-        $scope.ledger = r;
-        $scope.ledgerLoading = false;
-      });
+        .then(function (r) {
+            $scope.ledger        = r;
+            $scope.ledgerLoading = false;
+            return ledgerNano.instance.getPubKey(ledgerNano.account, false)
+                .then(function (wallet) {
+                    ledgerConfirmAddressModal.activate({address: wallet.address});
+                    return ledgerNano.instance.getPubKey(ledgerNano.account, true);
+                })
+                .then(function(wallet) {
+                    ledgerConfirmAddressModal.deactivate();
+                    $scope.$apply();
+                    return wallet;
+                })
+                .catch(function() {
+                    ledgerConfirmAddressModal.deactivate();
+                    $scope.$apply();
+                    return Promise.reject(null);
+                });
+        })
+        .then(function (wallet) {
+            userService.usingLedger = true;
+            $rootScope.usingLedger  = true;
+            walletLogin(wallet, false);
+        })
+        .catch(function(err) {
+            userService.usingLedger = false;
+            $rootScope.usingLedger  = false;
+        });
     function walletLogin(wallet, remember) {
       rise.accounts.getAccount(wallet.address)
         .catch(function (ac) {
@@ -63,15 +87,6 @@ angular.module('liskApp').controller('passphraseController', ['ledgerNano', 'dpo
         }
     }
     $scope.cleanUpUserData();
-
-    $scope.ledgerLogin = function () {
-      ledgerNano.instance.getPubKey(ledgerNano.account, false)
-        .then(function(res) {
-          userService.usingLedger = true;
-          $rootScope.usingLedger = true;
-          walletLogin(res, false);
-        })
-    }
 
     $scope.newUser = function () {
         $scope.newUserModal = newUser.activate({
