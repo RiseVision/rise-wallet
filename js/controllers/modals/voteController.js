@@ -108,7 +108,8 @@ angular.module('liskApp').controller('voteController', ['txService', 'dposOfflin
                     $scope.sending = false;
                     Materialize.toast('Transaction error', 3000, 'red white-text');
                     $scope.errorMessage.fromServer = err.message;
-                });
+                })
+                .then(function() { $scope.$apply(); })
 
         }
     }

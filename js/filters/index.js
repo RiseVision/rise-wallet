@@ -4,3 +4,4 @@ require('../../js/filters/timeAgoFilter');
 require('../../js/filters/liskFilter');
 require('../../js/filters/decimalFilter');
 require('../../js/filters/descriptionFilter');
+require('../../js/filters/txInfoFilter');

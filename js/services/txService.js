@@ -1,20 +1,30 @@
 require('angular');
 
-angular.module('liskApp').service('txService', function (riseAPI, dposOffline, ledgerNano, userService, timestampService) {
+angular.module('liskApp').service('txService',
+  function (riseAPI, dposOffline, ledgerNano, userService, ledgerConfirmTransactionModal) {
   function _signTransaction(tx, secret, secondSecret) {
     if (userService.usingLedger) {
       tx.senderPublicKey = userService.publicKey;
+      ledgerConfirmTransactionModal.activate({
+        transaction: tx,
+        address: userService.address,
+      });
       return ledgerNano.instance
         .signTX(
           ledgerNano.account,
           tx.getBytes()
         )
         .then(function (signature) {
+          ledgerConfirmTransactionModal.deactivate();
           tx._signature = signature.toString('hex');
           var transaction = tx.toObj();
           transaction.senderId = userService.address;
           return transaction;
         })
+        .catch(function (err) {
+          ledgerConfirmTransactionModal.deactivate();
+          return Promise.reject(err);
+        });
     } else {
       var wallet = new dposOffline.wallets.LiskLikeWallet(secret, 'R');
       var secondWallet = null;

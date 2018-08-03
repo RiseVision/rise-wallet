@@ -204,6 +204,10 @@ msgstr ""
 msgid "Confirm Address in Ledger"
 msgstr ""
 
+#: partials/modals/ledgerConfirmTransactionModal.html:7
+msgid "Confirm Transaction in Ledger"
+msgstr ""
+
 #: partials/modals/confirmDeletionModal.html:13
 msgid "Confirmation"
 msgstr ""
@@ -827,7 +831,6 @@ msgstr ""
 msgid "Reward"
 msgstr ""
 
-#: index.html:25
 #: wallet.html:25
 msgid "Rise - Blockchain Application Platform"
 msgstr ""

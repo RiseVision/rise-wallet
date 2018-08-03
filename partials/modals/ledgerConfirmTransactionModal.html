@@ -1,0 +1,23 @@
+<div class="app-modal valign-wrapper" style="z-index: 99999">
+    <div class="container height100">
+        <div class="row height100">
+            <div class="col-md-9 col-md-offset-2 height100 valign-wrapper">
+                <div class="modal-content" ng-click="$event.stopPropagation();">
+                    <div class="modal-header">
+                        <h2>{{'Confirm Transaction in Ledger'|translate}}</h2>
+                        <img src="/images/ledger-confirm-tx.png">
+                        <h3>Ensure your Ledger shows the following informations</h3>
+                        <ul style="margin-top: 25px;">
+                            <li><strong>From:</strong> {{address}}</li>
+                            <li ng-if="transaction.type === 0"><strong>To:</strong> {{transaction.recipientId}}</li>
+                            <li ng-if="transaction.type === 0"><strong>Amount:</strong> {{transaction.amount | liskFilter}}</li>
+                            <li ng-if="transaction.type === 3"><strong>Type:</strong> vote - {{transaction | txInfoFilter}}</li>
+                            <li ng-if="transaction.type === 2"><strong>Type:</strong> register a delegate</li>
+                            <li ng-if="transaction.type === 2"><strong>Username:</strong> {{transaction.asset.delegate.username}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -134,7 +134,8 @@ angular.module('liskApp').controller('registrationDelegateModalController',
                     userService.setDelegateProcess(false);
                     Materialize.toast('Transaction error', 3000, 'red white-text');
                     $scope.error = err.message;
-                });
+                })
+                .then(function() { $scope.$apply() });
 
         }
     }
