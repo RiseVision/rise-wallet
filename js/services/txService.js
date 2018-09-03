@@ -28,10 +28,10 @@ angular.module('liskApp').service('txService',
     } else {
       var wallet = new dposOffline.wallets.LiskLikeWallet(secret, 'R');
       var secondWallet = null;
-      if (data.secondSecret) {
+      if (secondSecret) {
         secondWallet = new dposOffline.wallets.LiskLikeWallet(secondSecret, 'R');
       }
-      userService.checkWallets(wallet,secondWallet);
+      userService.checkWallets(wallet, secondWallet);
       var signedTx = wallet.signTransaction(tx, secondWallet);
       return Promise.resolve(signedTx);
     }

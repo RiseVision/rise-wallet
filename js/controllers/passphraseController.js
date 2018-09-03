@@ -62,9 +62,7 @@ angular.module('liskApp').controller('passphraseController', ['ledgerConfirmAddr
           userService.setForging(account.forging);
           userService.setSecondPassphrase(account.secondSignature);
           userService.secondPublicKey = account.secondPublicKey;
-          if (remember && pass) {
-            userService.setSessionPassphrase(pass);
-          }
+
           var goto = $cookies.get('goto');
           if (goto) {
             $state.go(goto);
@@ -108,10 +106,12 @@ angular.module('liskApp').controller('passphraseController', ['ledgerConfirmAddr
             $scope.errorMessage = 'Passphrase must be a valid BIP39 mnemonic code.';
             return;
         }
-        var data = { secret: pass };
         $scope.errorMessage = "";
         var wallet = new dposOffline.wallets.LiskLikeWallet(pass, 'R');
         userService.usingLedger = false;
+        if (remember && pass) {
+          userService.setSessionPassphrase(pass);
+        }
         walletLogin(wallet, remember);
 
     }
