@@ -107,7 +107,7 @@ angular.module('liskApp').controller('voteController', ['txService', 'dposOfflin
                 .catch(function (err) {
                     $scope.sending = false;
                     Materialize.toast('Transaction error', 3000, 'red white-text');
-                    $scope.errorMessage.fromServer = err.message;
+                    $scope.fromServer = err.message;
                 })
                 .then(function() { $scope.$apply(); })
 

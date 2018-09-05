@@ -1,13 +1,13 @@
 require('angular');
 
-angular.module('liskApp').service('ledgerNano', function () {
+angular.module('liskApp').service('ledgerNano', function ($location) {
   var DposLedger       = require('dpos-ledger-api').DposLedger;
   var LedgerAccount    = require('dpos-ledger-api').LedgerAccount;
   var SupportedCoin    = require('dpos-ledger-api').SupportedCoin;
   var transportBrowser = require('@ledgerhq/hw-transport-u2f').default;
 
   var obj = {
-    account        : new LedgerAccount().coinIndex(SupportedCoin.RISE).account(0),
+    account        : new LedgerAccount().coinIndex(SupportedCoin.RISE).account(parseInt($location.$$search.ledgerAccount || '0', 10)),
     load: transportBrowser.create()
       .then(function (transport) {
         return new DposLedger(transport);

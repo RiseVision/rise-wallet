@@ -40,11 +40,8 @@ angular.module('liskApp').service('txService',
 
   function _broadcastSignedTX(tx) {
     return riseAPI
-      .buildTransport()
-      .then(function (transport) {
-        console.log('transport', transport);
-        return transport.postTransaction(tx)
-      });
+      .transactions
+      .put(tx);
   }
 
   return {
@@ -52,6 +49,12 @@ angular.module('liskApp').service('txService',
       try {
         return _signTransaction(tx, secret, secondSecret)
           .then(_broadcastSignedTX)
+          .then(function(r) {
+            if (r.invalid.length === 1) {
+              return Promise.reject(new Error(r.invalid[0].reason));
+            }
+            return r;
+          })
       } catch (err) {
         console.log(err);
         return Promise.reject(err);

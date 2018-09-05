@@ -831,6 +831,7 @@ msgstr ""
 msgid "Reward"
 msgstr ""
 
+#: index.html:25
 #: wallet.html:25
 msgid "Rise - Blockchain Application Platform"
 msgstr ""
